@@ -11,6 +11,9 @@ const mongoose = require('mongoose');
 // Import du router
 const stuffRoutes = require('./routes/stuff');
 
+// Import des user/routes
+const userRoutes = require('./routes/user');
+
 
 // Contient l'application
 const app = express();
@@ -42,6 +45,9 @@ app.use(bodyParser.json());
 
 // middlawre des stuffroutes
 app.use('/api/stuff', stuffRoutes);
+
+// middleware des userRoutes
+app.use('/api/auth', userRoutes);
 
 
 // Exporter l'application
