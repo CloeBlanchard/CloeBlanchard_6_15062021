@@ -1,6 +1,10 @@
 // Package de cryptage (bcrypt)
 const bcrypt = require('bcrypt');
 
+// package du token d'authenfication
+const jwt = require('jsonwebtoken');
+
+
 // configuration des routes d'authentification
 const User = require('../models/user');
 
@@ -39,7 +43,13 @@ exports.login = (req, res, next) => {
             }
             res.status(200).json({
                 userId: user._id,
-                token: 'TOKEN'
+                // Fonction de jsonwebtoken
+                token: jwt.sign(
+                    { userId: user._id},
+                    'RANDOM_TOKEN_SECRET',
+                    // expiration du token
+                    { expiresIn: '24h'}
+                )
             })
             });
     })
