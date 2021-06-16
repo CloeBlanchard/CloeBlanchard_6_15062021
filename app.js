@@ -1,15 +1,20 @@
 // Ajout d'express au projet
 const express = require('express');
+
 // Import de body-parser
 const bodyParser = require('body-parser');
+
 // Importation de mongoose
 const mongoose = require('mongoose');
+
 
 // Import du router
 const stuffRoutes = require('./routes/stuff');
 
+
 // Contient l'application
 const app = express();
+
 
 // Lier mongoDB Atlas à mon api
 mongoose.connect('mongodb+srv://cloe:Hy7VzxSrMHebbCsF@projet6.yqwxt.mongodb.net/projet6?retryWrites=true&w=majority',
@@ -18,7 +23,9 @@ mongoose.connect('mongodb+srv://cloe:Hy7VzxSrMHebbCsF@projet6.yqwxt.mongodb.net/
     useUnifiedTopology: true
   })
   .then(() => console.log('Connexion à MongoDB réussie !'))
-  .catch(() => console.log('Connexion à MongoDB échouée !'));
+  .catch(() => console.log('Connexion à MongoDB échouée !')
+);
+
 
 // Gestion erreur cors
 app.use((req, res, next) => {
@@ -28,11 +35,14 @@ app.use((req, res, next) => {
   next();
 });
 
+
 // Tranformer le corps de la requête en objet utilisable
 app.use(bodyParser.json());
 
+
 // middlawre des stuffroutes
 app.use('/api/stuff', stuffRoutes);
+
 
 // Exporter l'application
 module.exports = app;
