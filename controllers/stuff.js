@@ -3,11 +3,15 @@ const Thing = require('../models/thing');
 
 // Export de la fonction createThing et logique métier pour la route post
 exports.createThing = (req, res, next) => {
+    // envoyer un fichier avec la requete
+    const thingObject = JSON.parse(req.body.thing);
     // On enlève l'id (il sera généré automatiquement)
-    delete req.body._id;
+    delete thingObject._id;
     // corps de la requete
     const thing = new Thing({
-        ...req.body
+        ...thingObject,
+        // modification de l'url de l'image
+        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     });
     // enregistrement de l'objet dans la base de donnée
     thing.save()
@@ -26,7 +30,7 @@ exports.modifyThing = (req, res, next) => {
 exports.deleteThing = (req, res, nexet) => {
     Thing.deleteOne({ _id: req.params.id })
         .then(() => res.status(200).json({ message: 'Objet supprimé !' }))
-        .catch(error => res.status(400).json({ error })) 
+        .catch(error => res.status(400).json({ error }))
 };
 
 // Export de la fonction getOneThing et logique métier pour la creation d'un objet spécifique
@@ -40,5 +44,5 @@ exports.getOneThing = (req, res, next) => {
 exports.getAllThing = (req, res, next) => {
     Thing.find()
         .then(things => res.status(200).json({ things }))
-        .catch(error => res.status(400).json({ error })); 
+        .catch(error => res.status(400).json({ error }));
 };

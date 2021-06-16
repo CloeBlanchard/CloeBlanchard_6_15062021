@@ -11,9 +11,12 @@ const stuffCtrl = require('../controllers/stuff');
 // Import de l'authentification
 const auth = require('../middleware/auth');
 
+// Import du middlewar de gestion de fichier
+const multer = require('../middleware/multer-config');
+
 
 // Creation de la requete post création d'un objet
-router.post('/', auth, stuffCtrl.createThing);
+router.post('/', auth, multer, stuffCtrl.createThing);
 
 // Requete PUT modification d'un objet existant
 router.put('/:id', auth, stuffCtrl.modifyThing);

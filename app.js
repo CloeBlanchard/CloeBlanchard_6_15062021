@@ -7,6 +7,9 @@ const bodyParser = require('body-parser');
 // Importation de mongoose
 const mongoose = require('mongoose');
 
+// Import de path qui donne acces du ssysteme de fichier
+const path = require('path');
+
 
 // Import du router
 const stuffRoutes = require('./routes/stuff');
@@ -27,7 +30,7 @@ mongoose.connect('mongodb+srv://cloe:Hy7VzxSrMHebbCsF@projet6.yqwxt.mongodb.net/
   })
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch(() => console.log('Connexion à MongoDB échouée !')
-);
+  );
 
 
 // Gestion erreur cors
@@ -42,6 +45,7 @@ app.use((req, res, next) => {
 // Tranformer le corps de la requête en objet utilisable
 app.use(bodyParser.json());
 
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 // middlawre des stuffroutes
 app.use('/api/stuff', stuffRoutes);
