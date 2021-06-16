@@ -1,6 +1,9 @@
 // Importation du schema thing
 const Thing = require('../models/thing');
 
+// Import de file system
+const fs = require('fs');
+
 // Export de la fonction createThing et logique métier pour la route post
 exports.createThing = (req, res, next) => {
     // envoyer un fichier avec la requete
@@ -22,10 +25,10 @@ exports.createThing = (req, res, next) => {
 // Export de la fonction modifyThing et logique métier pour la mise à jour d'un objet existant
 exports.modifyThing = (req, res, next) => {
     const thingObject = req.file ?
-    {
-      ...JSON.parse(req.body.thing),
-      imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-     } : {...req.body};
+        {
+            ...JSON.parse(req.body.thing),
+            imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+        } : { ...req.body };
     Thing.updateOne({ _id: req.params.id }, { ...thingObject, _id: req.params.body })
         .then(() => res.status(200).json({ message: 'Objet modifié !' }))
         .catch(error => res.status(400).json({ error }));
@@ -33,9 +36,18 @@ exports.modifyThing = (req, res, next) => {
 
 // Export de la fonction deleteThing et logique métier pour la supression d'un objet
 exports.deleteThing = (req, res, nexet) => {
-    Thing.deleteOne({ _id: req.params.id })
-        .then(() => res.status(200).json({ message: 'Objet supprimé !' }))
-        .catch(error => res.status(400).json({ error }))
+    // Récupération de l'objet
+    Thing.findOne({ _id: req.params.id })
+        .then(thing => {
+            // Récupération du nom du fichier
+            const filename = thing.imageUrl.split('/images/')[1];
+            fs.unlink(`images/${filename}`, () => {
+                Thing.deleteOne({ _id: req.params.id })
+                    .then(() => res.status(200).json({ message: 'Objet supprimé !' }))
+                    .catch(error => res.status(400).json({ error }));
+            });
+        })
+        .catch(erro => res.status(500).json({ error }));
 };
 
 // Export de la fonction getOneThing et logique métier pour la creation d'un objet spécifique
