@@ -12,7 +12,7 @@ const path = require('path');
 
 
 // Import du router
-const stuffRoutes = require('./routes/stuff');
+const saucesRoutes = require('./routes/sauces');
 
 // Import des user/routes
 const userRoutes = require('./routes/user');
@@ -47,8 +47,8 @@ app.use(bodyParser.json());
 
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
-// middlawre des stuffroutes
-app.use('/api/stuff', stuffRoutes);
+// middlawre des saucesroutes
+app.use('/api/sauces', saucesRoutes);
 
 // middleware des userRoutes
 app.use('/api/auth', userRoutes);

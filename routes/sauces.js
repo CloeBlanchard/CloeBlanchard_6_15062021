@@ -6,7 +6,7 @@ const router = express.Router();
 
 
 // Import du controllers/stuf
-const stuffCtrl = require('../controllers/stuff');
+const saucesCtrl = require('../controllers/sauces');
 
 // Import de l'authentification
 const auth = require('../middleware/auth');
@@ -16,19 +16,19 @@ const multer = require('../middleware/multer-config');
 
 
 // Creation de la requete post création d'un objet
-router.post('/', auth, multer, stuffCtrl.createThing);
+router.post('/', auth, multer, saucesCtrl.createThing);
 
 // Requete PUT modification d'un objet existant
-router.put('/:id', auth, multer, stuffCtrl.modifyThing);
+router.put('/:id', auth, multer, saucesCtrl.modifyThing);
 
 // Requete DELETE suppression d'un objet
-router.delete('/:id', auth, stuffCtrl.deleteThing);
+router.delete('/:id', auth, saucesCtrl.deleteThing);
 
 // Requet GET récupération d'un objet spécifique
-router.get('/:id', auth, stuffCtrl.getOneThing);
+router.get('/:id', auth, saucesCtrl.getOneThing);
 
 // Requete GET récupération d'un tableau d'objet
-router.get('/', auth, stuffCtrl.getAllThing);
+router.get('/', auth, saucesCtrl.getAllThing);
 
 
 // Export du router

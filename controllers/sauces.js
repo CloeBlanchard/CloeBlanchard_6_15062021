@@ -41,6 +41,7 @@ exports.deleteThing = (req, res, nexet) => {
         .then(thing => {
             // Récupération du nom du fichier
             const filename = thing.imageUrl.split('/images/')[1];
+            // Pour supprimer un fichier
             fs.unlink(`images/${filename}`, () => {
                 Thing.deleteOne({ _id: req.params.id })
                     .then(() => res.status(200).json({ message: 'Objet supprimé !' }))
