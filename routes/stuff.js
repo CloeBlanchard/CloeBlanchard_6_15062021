@@ -8,21 +8,24 @@ const router = express.Router();
 // Import du controllers/stuf
 const stuffCtrl = require('../controllers/stuff');
 
+// Import de l'authentification
+const auth = require('../middleware/auth');
+
 
 // Creation de la requete post création d'un objet
-router.post('/', stuffCtrl.createThing);
+router.post('/', auth, stuffCtrl.createThing);
 
 // Requete PUT modification d'un objet existant
-router.put('/:id', stuffCtrl.modifyThing);
+router.put('/:id', auth, stuffCtrl.modifyThing);
 
 // Requete DELETE suppression d'un objet
-router.delete('/:id', stuffCtrl.deleteThing);
+router.delete('/:id', auth, stuffCtrl.deleteThing);
 
 // Requet GET récupération d'un objet spécifique
-router.get('/:id', stuffCtrl.getOneThing);
+router.get('/:id', auth, stuffCtrl.getOneThing);
 
 // Requete GET récupération d'un tableau d'objet
-router.get('/', stuffCtrl.getAllThing);
+router.get('/', auth, stuffCtrl.getAllThing);
 
 
 // Export du router

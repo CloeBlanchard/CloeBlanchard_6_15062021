@@ -19,14 +19,14 @@ exports.createThing = (req, res, next) => {
 exports.modifyThing = (req, res, next) => {
     Thing.updateOne({ _id: req.params.id }, { ...req.body, _id: req.params.body })
         .then(() => res.status(200).json({ message: 'Objet modifié !' }))
-        .catch(error => res.status(400).json({ error })); // Erreur serveur
+        .catch(error => res.status(400).json({ error }));
 };
 
 // Export de la fonction deleteThing et logique métier pour la supression d'un objet
 exports.deleteThing = (req, res, nexet) => {
     Thing.deleteOne({ _id: req.params.id })
         .then(() => res.status(200).json({ message: 'Objet supprimé !' }))
-        .catch(error => res.status(400).json({ error })) // Erreur serveur
+        .catch(error => res.status(400).json({ error })) 
 };
 
 // Export de la fonction getOneThing et logique métier pour la creation d'un objet spécifique
@@ -40,5 +40,5 @@ exports.getOneThing = (req, res, next) => {
 exports.getAllThing = (req, res, next) => {
     Thing.find()
         .then(things => res.status(200).json({ things }))
-        .catch(error => res.status(400).json({ error })); // Erreur serveur
+        .catch(error => res.status(400).json({ error })); 
 };
