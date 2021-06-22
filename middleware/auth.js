@@ -3,7 +3,6 @@ const jwt = require('jsonwebtoken');
 
 
 // Protection des routes et vérifiera que les user soient authentifié avant autorisation d'envoie de requete
-// Protection des routes et vérifiera que les user soient authentifié avant autorisation d'envoie de requete
 module.exports = (req, res, next) => {
     try {
         // Récupération du deuxième élément du tableau de token

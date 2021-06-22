@@ -7,14 +7,12 @@ const fs = require('fs');
 // Export de la fonction createThing et logique métier pour la route post
 exports.createThing = (req, res, next) => {
     // envoyer un fichier avec la requete
-    const thingObject = JSON.parse(req.body.thing);
-    // On enlève l'id (il sera généré automatiquement)
-    delete thingObject._id;
+    const thingObject = req.body;
     // corps de la requete
     const thing = new Thing({
         ...thingObject,
         // modification de l'url de l'image
-        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
     });
     // enregistrement de l'objet dans la base de donnée
     thing.save()
@@ -38,7 +36,7 @@ exports.modifyThing = (req, res, next) => {
 exports.deleteThing = (req, res, nexet) => {
     // Récupération de l'objet
     Thing.findOne({ _id: req.params.id })
-        .then(thing => {
+        .then((thing) => {
             // Récupération du nom du fichier
             const filename = thing.imageUrl.split('/images/')[1];
             // Pour supprimer un fichier
@@ -48,7 +46,7 @@ exports.deleteThing = (req, res, nexet) => {
                     .catch(error => res.status(400).json({ error }));
             });
         })
-        .catch(erro => res.status(500).json({ error }));
+    .catch(error => res.status(500).json({ error }));
 };
 
 // Export de la fonction getOneThing et logique métier pour la creation d'un objet spécifique
@@ -64,3 +62,7 @@ exports.getAllThing = (req, res, next) => {
         .then(things => res.status(200).json({ things }))
         .catch(error => res.status(400).json({ error }));
 };
+
+// Système de like
+
+// Système de dislike
