@@ -74,6 +74,26 @@ exports.getAllThing = (req, res, next) => {
         .catch(error => res.status(400).json({ error }));
 };
 
-// Système de like
-
-// Système de dislike
+// Système de like et dislike
+// Exports de la fonction likeDislikeSauce
+exports.likeDislikeThing = (req, res, next) => {
+    // Evalue un expression et selon response obtien le cas associé
+    switch (req.body.like) {
+        // Si le cas coresspond à 0 
+        case 0 :
+            Thing.findOne({ _id: req.params.id })
+            .then((sauce) => {
+            // Si le user est déjà dans le tableau de usersLike
+                if(sauce.usersLiked.find(user => user === res.body.userId)) {
+                    // Si user est déjà dans le tableau on uptdate la sauce avec _id de la requete
+                    Thing.updateOne({ _id: req.params._id }, {
+                        // Décrementation de 1 des valeurs de Like (-1)
+                        $inc: {likes: -1},
+                        // Le user est retiré du tableau
+                        $pull: {usersLiked: req.body.userId}
+                    })
+                .then(() => res.status(201).json({ message : 'Like approuvé !' }) )
+                .catch(error => res.status(400).json({ error }));
+                }})
+    }
+}
