@@ -83,6 +83,18 @@ exports.voteThing = (req, res, next) => {
         case 0:
             Thing.findOne({ _id: req.params.id})
             .then((sauce) => { 
+                // Système de dislike si le user est déjà dans le tableau de usersLike
+                if (sauce.usersDisliked.find(user => user === req.body.userId)) {
+                    // User est dans le tableau alors on update la sauce avec _id de la requete
+                    Thing.updateOne({ _id: req.params.id} , {
+                        // Décrémentation de 1 des valeurs de Dislike (-1)
+                        $inc: { dislikes: -1 },
+                        // Le user est retiré du tableau
+                        $pull: { usersDisliked : req.body.userId }
+                    })
+                    .then(() => res.status(201).json({ message: 'Votre avis a bien été enregistré !'}))
+                    .catch((error) => res.status(400).json({ error }));
+                }
                 // Système de like si user est déjà dans le tableau de usersLike
                 if (sauce.usersLiked.find(user => user === req.body.userId)) {
                     // User est dans le tableau alors on update la sauce avec _id de la requete
@@ -95,18 +107,7 @@ exports.voteThing = (req, res, next) => {
                 .then(() => res.status(201).json({ message: 'Votre avis a bien été enregistré !'}))
                 .catch((error) => res.status(400).json({ error }));
                 }
-                // Système de dislike si le user est déjà dans le tableau de usersLike
-                if (sauce.usersDisliked.find(user => user === req.body.userId)) {
-                    // User est dans le tableau alors on update la sauce avec _id de la requete
-                    Thing.updateOne({ _id: req.params.id} , {
-                        // Décrémentation de 1 des valeurs de Like (-1)
-                        $inc: { dislikes: -1 },
-                        // Le user est retiré du tableau
-                        $pull: { usersDisliked : req.body.userId }
-                    })
-                    .then(() => res.status(201).json({ message: 'Votre avis a bien été enregistré !'}))
-                    .catch((error) => res.status(400).json({ error }));
-                }
+                
             })
             .catch((error) => res.status(404).json({ error }));
             // On rompt la boucle
@@ -127,7 +128,7 @@ exports.voteThing = (req, res, next) => {
             break;
         // Système de dislike si user n'est pas dans le tableau 
         // Si le cas correspond a 1
-        case 1:
+        case -1:
             // Recherche ed la sauce correspondant à _id
             Thing.updateOne({ _id: req.params.id}, {
                 // Incrémentation de 1 des valeurs de Like (+1)
@@ -139,8 +140,8 @@ exports.voteThing = (req, res, next) => {
             .catch((error) => res.status(400).json({ error }));
             // On rompt la boucle
             break;
-            // Erreur par defaut
+        // Erreur par defaut
         default:
-            console.error('Bad request');
+        console.error('Bad request');
     }
 };
