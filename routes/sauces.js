@@ -5,7 +5,7 @@ const express = require('express');
 const router = express.Router();
 
 
-// Import du controllers/stuf
+// Import du controllers/sauces
 const saucesCtrl = require('../controllers/sauces');
 
 // Import de l'authentification
@@ -29,6 +29,9 @@ router.get('/:id', auth, saucesCtrl.getOneThing);
 
 // Requete GET récupération d'un tableau d'objet
 router.get('/', auth, saucesCtrl.getAllThing);
+
+// Requete POST du like
+router.post('/:id/like', auth, saucesCtrl.voteThing);
 
 
 // Export du router

@@ -76,24 +76,71 @@ exports.getAllThing = (req, res, next) => {
 
 // Système de like et dislike
 // Exports de la fonction likeDislikeSauce
-exports.likeDislikeThing = (req, res, next) => {
-    // Evalue un expression et selon response obtien le cas associé
+exports.voteThing = (req, res, next) => {
+    // Evalue une expression et celon la response obtiens le cas associé
     switch (req.body.like) {
-        // Si le cas coresspond à 0 
-        case 0 :
-            Thing.findOne({ _id: req.params.id })
-            .then((sauce) => {
-            // Si le user est déjà dans le tableau de usersLike
-                if(sauce.usersLiked.find(user => user === res.body.userId)) {
-                    // Si user est déjà dans le tableau on uptdate la sauce avec _id de la requete
-                    Thing.updateOne({ _id: req.params._id }, {
-                        // Décrementation de 1 des valeurs de Like (-1)
-                        $inc: {likes: -1},
+        // Si le cas correspond à 0
+        case 0:
+            Thing.findOne({ _id: req.params.id})
+            .then((sauce) => { 
+                // Système de like si user est déjà dans le tableau de usersLike
+                if (sauce.usersLiked.find(user => user === req.body.userId)) {
+                    // User est dans le tableau alors on update la sauce avec _id de la requete
+                    Thing.updateOne({ _id: req.params.id }, {
+                        // Décrémentation de 1 des valeurs de Like (-1)
+                        $inc: { likes: -1},
                         // Le user est retiré du tableau
-                        $pull: {usersLiked: req.body.userId}
+                        $pull: { usersLiked: req.body.userId }
                     })
-                .then(() => res.status(201).json({ message : 'Like approuvé !' }) )
-                .catch(error => res.status(400).json({ error }));
-                }})
+                .then(() => res.status(201).json({ message: 'Votre avis a bien été enregistré !'}))
+                .catch((error) => res.status(400).json({ error }));
+                }
+                // Système de dislike si le user est déjà dans le tableau de usersLike
+                if (sauce.usersDisliked.find(user => user === req.body.userId)) {
+                    // User est dans le tableau alors on update la sauce avec _id de la requete
+                    Thing.updateOne({ _id: req.params.id} , {
+                        // Décrémentation de 1 des valeurs de Like (-1)
+                        $inc: { dislikes: -1 },
+                        // Le user est retiré du tableau
+                        $pull: { usersDisliked : req.body.userId }
+                    })
+                    .then(() => res.status(201).json({ message: 'Votre avis a bien été enregistré !'}))
+                    .catch((error) => res.status(400).json({ error }));
+                }
+            })
+            .catch((error) => res.status(404).json({ error }));
+            // On rompt la boucle
+            break;
+        // Système de like si user n'est pas dans le tableau 
+        // Si le cas correspond a 1
+        case 1:
+            // Recherche ed la sauce correspondant à _id
+            Thing.updateOne({ _id: req.params.id}, {
+                // Incrémentation de 1 des valeurs de Like (+1)
+                $inc: { likes: 1},
+                // Ajout de le user dans le tableau 'usersLiked'
+                $push: { usersLiked: req.body.userId}
+            })
+            .then(() => res.status(200).json({ message: 'Votre avis a bien été enregistré !'}))
+            .catch((error) => res.status(400).json({ error }));
+            // On rompt la boucle
+            break;
+        // Système de dislike si user n'est pas dans le tableau 
+        // Si le cas correspond a 1
+        case 1:
+            // Recherche ed la sauce correspondant à _id
+            Thing.updateOne({ _id: req.params.id}, {
+                // Incrémentation de 1 des valeurs de Like (+1)
+                $inc: { dislikes: 1},
+                // Ajout de le user dans le tableau 'usersLiked'
+                $push: { usersDisliked: req.body.userId}
+            })
+            .then(() => res.status(200).json({ message: 'Votre avis a bien été enregistré !'}))
+            .catch((error) => res.status(400).json({ error }));
+            // On rompt la boucle
+            break;
+            // Erreur par defaut
+        default:
+            console.error('Bad request');
     }
-}
+};
