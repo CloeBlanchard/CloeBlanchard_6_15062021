@@ -1,22 +1,34 @@
 // Package de cryptage (bcrypt)
 const bcrypt = require('bcrypt');
-
 // package du token d'authenfication
 const jwt = require('jsonwebtoken');
+// Package du maskage de l'e-mail
+const MaskData = require('maskdata');
 
 
 // configuration des routes d'authentification
 const User = require('../models/user');
 
 
+
+
 // Création d'un nouvel utilisateur
 exports.signup = (req, res, next) => {
+    // Masquage de l'email
+    const emailMask2Options = {
+        maskWith: "*",
+        unmaskedStartCharactersBeforeAt: 30,
+        unmaskedEndCharactersAfterAt: 20,
+        maskAtTheRate: false,
+    };
+    const email = req.body.email;
+    const maskedEmail = MaskData.maskEmail2(email, emailMask2Options);
     // Hachage du password
     bcrypt.hash(req.body.password, 10) // 10 tout de l'algorythme de hachage (solt)
     .then(hash => {
         // nouvel user
         const user = new User ({
-            email: req.body.email,
+            maskedEmail,
             password: hash
         });
         // Methode save pour l'enregistrer dans la base de donnée
