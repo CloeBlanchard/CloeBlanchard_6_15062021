@@ -6,9 +6,12 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 // Import de path qui donne acces du ssysteme de fichier
 const path = require('path');
+// Import de Helmet qui permet la sécurisation des en tête http
+const helmet = require('helmet');
 
 // Import de la gestion de variable d'environnemnt
 require('dotenv').config()
+
 // Import du router
 const saucesRoutes = require('./routes/sauces');
 // Import des user/routes
@@ -16,9 +19,11 @@ const userRoutes = require('./routes/user');
 
 // Contient l'application
 const app = express();
+// Contient Helmet
+app.use(helmet());
 
 // Lier mongoDB Atlas à mon api
-mongoose.connect('mongodb+srv://' + process.env.user_db + ':' + process.env.password_db + '@' + process.env.cluster_db + '.mongodb.net/' + process.env.name_db + '?retryWrites=true&w=majority',
+mongoose.connect('mongodb+srv://' + process.env.userAdmin_db + ':' + process.env.passwordAdmin_db + '@' + process.env.cluster_db + '.mongodb.net/' + process.env.name_db + '?retryWrites=true&w=majority',
   {
     useNewUrlParser: true,
     useUnifiedTopology: true
