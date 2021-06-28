@@ -17,4 +17,4 @@ const thingSchema = mongoose.Schema({
 });
 
 // Export du module fini
-module.exports = mongoose.model('thing', thingSchema);
+module.exports = mongoose.model('sauces', thingSchema);
