@@ -35,7 +35,7 @@ exports.signup = (req, res, next) => {
         .catch(error => res.status(500).json({ error }));
 };
 
-// Connection d'utilisateur existant
+// Connexion d'utilisateur existant
 exports.login = (req, res, next) => {
     // Trouve un user dans la base de données
     User.findOne({ email: req.body.email })
