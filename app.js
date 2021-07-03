@@ -23,14 +23,14 @@ const app = express();
 app.use(helmet());
 
 // Lier mongoDB Atlas à mon api
-mongoose.connect('mongodb+srv://' + process.env.userAdmin_db + ':' + process.env.passwordAdmin_db + '@' + process.env.cluster_db + '.mongodb.net/' + process.env.name_db + '?retryWrites=true&w=majority',
+mongoose.connect('mongodb+srv://'+process.env.userAdmin_db+':'+process.env.passwordAdmin_db+'@'+process.env.cluster_db+'.mongodb.net/'+process.env.name_db+'?retryWrites=true&w=majority',
   {
     useNewUrlParser: true,
     useUnifiedTopology: true
   })
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch(() => console.log('Connexion à MongoDB échouée !')
-  );
+);
 
 // Gestion erreur cors
 app.use((req, res, next) => {
