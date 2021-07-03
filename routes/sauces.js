@@ -7,7 +7,7 @@ const router = express.Router();
 const saucesCtrl = require('../controllers/sauces');
 // Import de l'authentification
 const auth = require('../middleware/auth');
-// Import du middlewar de gestion de fichier
+// Import du middleware de gestion de fichier
 const multer = require('../middleware/multer-config');
 
 
