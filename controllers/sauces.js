@@ -3,7 +3,7 @@ const Sauce = require('../models/sauces');
 // Import de file system
 const fs = require('fs');
 
-// Export de la fonction createThing et logique métier pour la route post
+// Export de la fonction createThing et logique métier pour la methode post
 exports.createSauce = (req, res, next) => {
     // envoyer un fichier avec la requete
     const sauceObject = JSON.parse(req.body.sauce);
@@ -59,14 +59,14 @@ exports.deleteSauce = (req, res, nexet) => {
         .catch(error => res.status(500).json({ error }));
 };
 
-// Export de la fonction getOneThing et logique métier pour la creation d'un objet spécifique
+// Export de la fonction getOneThing et logique métier pour la récupération d'un objet spécifique
 exports.getOneSauce = (req, res, next) => {
     Sauce.findOne({ _id: req.params.id })
         .then(sauce => res.status(200).json(sauce))
         .catch(error => res.status(404).json({ error })); //Objet non trouvé
 };
 
-// Export de la fonction getAllThings et logique métier pour la creation de tableau d'objet
+// Export de la fonction getAllThings et logique métier pour la récupération de tableau d'objet
 exports.getAllSauces = (req, res, next) => {
     Sauce.find()
         .then(sauces => res.status(200).json(sauces))
