@@ -3,7 +3,12 @@ const bcrypt = require('bcrypt');
 // package du token d'authenfication
 const jwt = require('jsonwebtoken');
 // Package du maskage de l'e-mail
-const MaskData = require('maskdata');
+// const MaskData = require('maskdata');
+// Package dy cryptage de l'email
+const cryptoJs = require('crypto-js');
+
+var key = cryptoJs.enc.Hex.parse(process.env.key);
+var iv = cryptoJs.enc.Hex.parse(process.env.iv);
 
 // configuration des routes d'authentification
 const User = require('../models/user');
@@ -11,20 +16,21 @@ const User = require('../models/user');
 // Création d'un nouvel utilisateur
 exports.signup = (req, res, next) => {
     // Masquage de l'email
-    const emailMask2Options = {
-        maskWith: "*",
-        unmaskedStartCharactersBeforeAt: 30,
-        unmaskedEndCharactersAfterAt: 20,
-        maskAtTheRate: false,
-    };
-    const email = req.body.email;
-    const maskedEmail = MaskData.maskEmail2(email, emailMask2Options);
+    // const emailMask2Options = {
+    //     maskWith: "*",
+    //     unmaskedStartCharactersBeforeAt: 3,
+    //     unmaskedEndCharactersAfterAt: 2,
+    //     maskAtTheRate: false,
+    // };
+    // const email = req.body.email;
+    // const maskedEmail = MaskData.maskEmail2(email, emailMask2Options);
     // Hachage du password
     bcrypt.hash(req.body.password, 10) // 10 tout de l'algorythme de hachage (solt)
         .then(hash => {
             // nouvel user
             const user = new User({
-                maskedEmail,
+                // email: maskedEmail,
+                email: cryptoJs.AES.encrypt(req.body.email, key, { iv: iv }).toString(),
                 password: hash
             });
             // Methode save pour l'enregistrer dans la base de donnée
@@ -38,7 +44,7 @@ exports.signup = (req, res, next) => {
 // Connexion d'utilisateur existant
 exports.login = (req, res, next) => {
     // Trouve un user dans la base de données
-    User.findOne({ email: req.body.email })
+    User.findOne({ email: cryptoJs.AES.encrypt(req.body.email, key, { iv: iv }).toString() })
         .then(user => {
             if (!user) {
                 return res.status(401).json({ error: 'Utilisateur non trouvé !' });
