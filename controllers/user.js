@@ -15,21 +15,12 @@ const User = require('../models/user');
 
 // Création d'un nouvel utilisateur
 exports.signup = (req, res, next) => {
-    // Masquage de l'email
-    // const emailMask2Options = {
-    //     maskWith: "*",
-    //     unmaskedStartCharactersBeforeAt: 3,
-    //     unmaskedEndCharactersAfterAt: 2,
-    //     maskAtTheRate: false,
-    // };
-    // const email = req.body.email;
-    // const maskedEmail = MaskData.maskEmail2(email, emailMask2Options);
     // Hachage du password
     bcrypt.hash(req.body.password, 10) // 10 tout de l'algorythme de hachage (solt)
         .then(hash => {
             // nouvel user
             const user = new User({
-                // email: maskedEmail,
+                // Masquage de l'email
                 email: cryptoJs.AES.encrypt(req.body.email, key, { iv: iv }).toString(),
                 password: hash
             });
