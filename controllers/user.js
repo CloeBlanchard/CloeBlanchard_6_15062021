@@ -2,8 +2,6 @@
 const bcrypt = require('bcrypt');
 // package du token d'authenfication
 const jwt = require('jsonwebtoken');
-// Package du maskage de l'e-mail
-// const MaskData = require('maskdata');
 // Package dy cryptage de l'email
 const cryptoJs = require('crypto-js');
 
@@ -16,7 +14,7 @@ const User = require('../models/user');
 // Création d'un nouvel utilisateur
 exports.signup = (req, res, next) => {
     // Hachage du password
-    bcrypt.hash(req.body.password, 10) // 10 tout de l'algorythme de hachage (solt)
+    bcrypt.hash(req.body.password, 10) // 10 tour de l'algorythme de hachage (salt)
         .then(hash => {
             // nouvel user
             const user = new User({
